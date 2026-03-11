@@ -136,3 +136,38 @@ footer {
     color: #999;
     font-size: 12px;
 }
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    .form-group label {
+        margin-bottom: 5px;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .container {
+        width: 90%;
+        padding: 25px;
+    }
+}
