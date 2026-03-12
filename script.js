@@ -45,4 +45,34 @@ class Song {
     }
 }
 
-console.log('Song class with all methods');
+let songs = [];
+
+const DOM = {
+    songName: null,
+    artist: null,
+    genre: null,
+    rating: null,
+    hasVideo: null,
+    formatRadios: null,
+    playlistContainer: null,
+    addBtn: null,
+    songForm: null,
+    saveBtn: null,
+    sortBtn: null
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    DOM.songName = document.getElementById('songName');
+    DOM.artist = document.getElementById('artist');
+    DOM.genre = document.getElementById('genre');
+    DOM.rating = document.getElementById('rating');
+    DOM.hasVideo = document.getElementById('hasVideo');
+    DOM.formatRadios = document.getElementsByName('format');
+    DOM.playlistContainer = document.getElementById('playlistContainer');
+    DOM.addBtn = document.getElementById('addBtn');
+    DOM.songForm = document.getElementById('songForm');
+    DOM.saveBtn = document.getElementById('saveBtn');
+    DOM.sortBtn = document.getElementById('sortBtn');
+    
+    console.log('DOM elements loaded');
+});
