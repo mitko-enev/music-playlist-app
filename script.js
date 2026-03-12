@@ -28,6 +28,21 @@ class Song {
             </div>
         `;
     }
+
+    toString() {
+        const videoText = this.hasVideo ? ' | With video' : '';
+        return `${this.name} | ${this.artist} | ${this.genre} | ${this.format} | Rating: ${this.rating}/10${videoText}`;
+    }
+
+    formatDate() {
+        const date = this.dateAdded;
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${day}.${month}.${year} ${hours}:${minutes}`;
+    }
 }
 
-console.log('Song class with toHTML method');
+console.log('Song class with all methods');
