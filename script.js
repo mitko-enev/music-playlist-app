@@ -212,6 +212,30 @@ function sortSongsByArtist() {
     showNotification('Sorted by artist', 'info');
 }
 
+function showPlaylistStats() {
+    if (songs.length === 0) {
+        showNotification('Playlist is empty', 'info');
+        return;
+    }
+    
+    const count = songs.length;
+    const avgRating = calculateAverageRating();
+    const maxRating = Math.max(...songs.map(s => s.rating));
+    const minRating = Math.min(...songs.map(s => s.rating));
+    const genres = [...new Set(songs.map(s => s.genre))];
+    const withVideo = songs.filter(s => s.hasVideo).length;
+    
+    console.log('📊 PLAYLIST STATISTICS:');
+    console.log(`   Songs: ${count}`);
+    console.log(`   Average rating: ${avgRating}/10`);
+    console.log(`   Highest: ${maxRating}`);
+    console.log(`   Lowest: ${minRating}`);
+    console.log(`   Genres: ${genres.length}`);
+    console.log(`   With video: ${withVideo}`);
+    
+    showNotification(`📊 ${count} songs, avg: ${avgRating}/10`, 'info');
+}
+
 function clearForm() {
     DOM.songName.value = '';
     DOM.artist.value = '';
@@ -260,6 +284,11 @@ function initKeyboardShortcuts() {
         
         if (event.key === 'Escape') {
             clearForm();
+        }
+        
+        if (event.ctrlKey && event.key === 'i') {
+            event.preventDefault();
+            showPlaylistStats();
         }
     });
 }
