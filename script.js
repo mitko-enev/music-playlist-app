@@ -61,6 +61,57 @@ const DOM = {
     sortBtn: null
 };
 
+function getSelectedFormat() {
+    for (let radio of DOM.formatRadios) {
+        if (radio.checked) {
+            return radio.value;
+        }
+    }
+    return 'Single';
+}
+
+function addSong(event) {
+    if (event) {
+        event.preventDefault();
+    }
+
+    const name = DOM.songName.value.trim();
+    const artist = DOM.artist.value.trim();
+    const genre = DOM.genre.value;
+    const rating = parseInt(DOM.rating.value);
+    const hasVideo = DOM.hasVideo.checked;
+    const format = getSelectedFormat();
+
+    if (!name) {
+        alert('Please enter song name!');
+        DOM.songName.focus();
+        return;
+    }
+
+    if (!artist) {
+        alert('Please enter artist name!');
+        DOM.artist.focus();
+        return;
+    }
+
+    const newSong = new Song(name, artist, genre, format, rating, hasVideo);
+    songs.push(newSong);
+    
+    DOM.songName.value = '';
+    DOM.artist.value = '';
+    DOM.rating.value = 5;
+    DOM.hasVideo.checked = false;
+    
+    if (DOM.formatRadios && DOM.formatRadios[0]) {
+        DOM.formatRadios[0].checked = true;
+    }
+    
+    DOM.songName.focus();
+    
+    console.log('Song added:', newSong);
+    console.log('Total songs:', songs.length);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     DOM.songName = document.getElementById('songName');
     DOM.artist = document.getElementById('artist');
@@ -74,5 +125,13 @@ document.addEventListener('DOMContentLoaded', function() {
     DOM.saveBtn = document.getElementById('saveBtn');
     DOM.sortBtn = document.getElementById('sortBtn');
     
-    console.log('DOM elements loaded');
+    if (DOM.songForm) {
+        DOM.songForm.addEventListener('submit', addSong);
+    }
+    
+    if (DOM.addBtn) {
+        DOM.addBtn.addEventListener('click', addSong);
+    }
+    
+    console.log('Song Management initialized');
 });
