@@ -70,6 +70,22 @@ function getSelectedFormat() {
     return 'Single';
 }
 
+function displayPlaylist() {
+    if (!DOM.playlistContainer) return;
+    
+    if (songs.length === 0) {
+        DOM.playlistContainer.innerHTML = '<div class="empty-playlist">🎵 No songs added yet</div>';
+        return;
+    }
+
+    let html = '';
+    songs.forEach(song => {
+        html += song.toHTML();
+    });
+
+    DOM.playlistContainer.innerHTML = html;
+}
+
 function addSong(event) {
     if (event) {
         event.preventDefault();
@@ -97,6 +113,8 @@ function addSong(event) {
     const newSong = new Song(name, artist, genre, format, rating, hasVideo);
     songs.push(newSong);
     
+    alert(`"${name}" added successfully!`);
+    
     DOM.songName.value = '';
     DOM.artist.value = '';
     DOM.rating.value = 5;
@@ -107,6 +125,7 @@ function addSong(event) {
     }
     
     DOM.songName.focus();
+    displayPlaylist();
     
     console.log('Song added:', newSong);
     console.log('Total songs:', songs.length);
@@ -132,6 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (DOM.addBtn) {
         DOM.addBtn.addEventListener('click', addSong);
     }
+    
+    displayPlaylist();
     
     console.log('Song Management initialized');
 });
