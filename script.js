@@ -166,6 +166,13 @@ function savePlaylist() {
     }
 }
 
+function isDuplicateSong(name, artist) {
+    return songs.some(song => 
+        song.name.toLowerCase() === name.toLowerCase() && 
+        song.artist.toLowerCase() === artist.toLowerCase()
+    );
+}
+
 function sortSongs() {
     if (songs.length === 0) {
         showNotification('No songs to sort!', 'error');
@@ -376,6 +383,11 @@ function addSong(event) {
     if (!artist) {
         showNotification('Please enter artist name!', 'error');
         DOM.artist.focus();
+        return;
+    }
+
+    if (isDuplicateSong(name, artist)) {
+        showNotification(`"${name}" by ${artist} already exists!`, 'error');
         return;
     }
 
