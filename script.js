@@ -70,6 +70,48 @@ function getSelectedFormat() {
     return 'Single';
 }
 
+function showNotification(message, type = 'success') {
+    const existing = document.querySelectorAll('.notification').length;
+    if (existing > 3) {
+        const oldest = document.querySelector('.notification');
+        if (oldest) oldest.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    let icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'info') icon = 'ℹ️';
+    
+    notification.innerHTML = `
+        <span class="notification-icon">${icon}</span>
+        <span class="notification-message">${message}</span>
+        <span class="notification-close">✕</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.classList.remove('show');
+            notification.classList.add('hide');
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 3000);
+}
+
 function updateRatingDisplay() {
     const ratingSlider = document.getElementById('rating');
     let ratingDisplay = document.getElementById('ratingDisplay');
@@ -127,13 +169,13 @@ function addSong(event) {
     const format = getSelectedFormat();
 
     if (!name) {
-        alert('Please enter song name!');
+        showNotification('Please enter song name!', 'error');
         DOM.songName.focus();
         return;
     }
 
     if (!artist) {
-        alert('Please enter artist name!');
+        showNotification('Please enter artist name!', 'error');
         DOM.artist.focus();
         return;
     }
@@ -141,7 +183,7 @@ function addSong(event) {
     const newSong = new Song(name, artist, genre, format, rating, hasVideo);
     songs.push(newSong);
     
-    alert(`"${name}" added successfully!`);
+    showNotification(`"${name}" added successfully!`, 'success');
     
     DOM.songName.value = '';
     DOM.artist.value = '';
