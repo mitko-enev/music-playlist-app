@@ -93,6 +93,24 @@ button:hover {
     background: #5a6fd6;
 }
 
+#saveBtn {
+    background: #4CAF50;
+    color: white;
+}
+
+#saveBtn:hover {
+    background: #45a049;
+}
+
+#sortBtn {
+    background: #ff9800;
+    color: white;
+}
+
+#sortBtn:hover {
+    background: #fb8c00;
+}
+
 .progress-bar {
     background: #f0f0f0;
     border-radius: 20px;

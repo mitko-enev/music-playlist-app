@@ -112,6 +112,60 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
+function calculateAverageRating() {
+    if (songs.length === 0) return '0.0';
+    const total = songs.reduce((sum, song) => sum + song.rating, 0);
+    return (total / songs.length).toFixed(1);
+}
+
+function savePlaylist() {
+    if (songs.length === 0) {
+        showNotification('No songs to save!', 'error');
+        return;
+    }
+
+    try {
+        let content = '';
+        content += '='.repeat(60) + '\n';
+        content += '           🎵 MY PLAYLIST 🎵\n';
+        content += '='.repeat(60) + '\n\n';
+        
+        const now = new Date();
+        content += `Date: ${now.toLocaleDateString()}\n`;
+        content += `Time: ${now.toLocaleTimeString()}\n`;
+        content += `Total songs: ${songs.length}\n`;
+        content += `Average rating: ${calculateAverageRating()}\n`;
+        content += '-'.repeat(60) + '\n\n';
+        
+        songs.forEach((song, index) => {
+            content += `${index + 1}. ${song.toString()}\n`;
+        });
+        
+        content += '\n' + '='.repeat(60) + '\n';
+        content += '🎉 Thank you for using the app!\n';
+        content += '='.repeat(60);
+        
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        const dateStr = now.toISOString().slice(0, 10);
+        link.download = `playlist_${dateStr}.txt`;
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showNotification(`Playlist saved! (${songs.length} songs)`, 'success');
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error saving file!', 'error');
+    }
+}
+
 function updateRatingDisplay() {
     const ratingSlider = document.getElementById('rating');
     let ratingDisplay = document.getElementById('ratingDisplay');
@@ -278,6 +332,10 @@ document.addEventListener('DOMContentLoaded', function() {
         DOM.addBtn.addEventListener('click', addSong);
     }
     
+    if (DOM.saveBtn) {
+        DOM.saveBtn.addEventListener('click', savePlaylist);
+    }
+    
     if (DOM.rating) {
         DOM.rating.addEventListener('input', updateRatingDisplay);
         updateRatingDisplay();
@@ -288,5 +346,5 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgressBar();
     updateSongCount();
     
-    console.log('Song Management initialized');
+    console.log('Music Playlist App initialized');
 });
