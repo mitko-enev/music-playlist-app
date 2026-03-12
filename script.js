@@ -70,6 +70,101 @@ function getSelectedFormat() {
     return 'Single';
 }
 
+function showNotification(message, type = 'success') {
+    const existing = document.querySelectorAll('.notification').length;
+    if (existing > 3) {
+        const oldest = document.querySelector('.notification');
+        if (oldest) oldest.remove();
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    let icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'info') icon = 'ℹ️';
+    
+    notification.innerHTML = `
+        <span class="notification-icon">${icon}</span>
+        <span class="notification-message">${message}</span>
+        <span class="notification-close">✕</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.classList.remove('show');
+            notification.classList.add('hide');
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 3000);
+}
+
+function updateRatingDisplay() {
+    const ratingSlider = document.getElementById('rating');
+    let ratingDisplay = document.getElementById('ratingDisplay');
+    
+    if (!ratingDisplay && ratingSlider) {
+        ratingDisplay = document.createElement('span');
+        ratingDisplay.id = 'ratingDisplay';
+        ratingDisplay.className = 'rating-value';
+        ratingSlider.parentNode.appendChild(ratingDisplay);
+    }
+    
+    if (ratingSlider && ratingDisplay) {
+        const value = ratingSlider.value;
+        const percent = (value - 1) / 9 * 100;
+        ratingDisplay.textContent = `Rating: ${value}`;
+        ratingDisplay.style.left = `calc(${percent}% - 30px)`;
+        
+        ratingDisplay.classList.remove('low', 'medium', 'high');
+        if (value <= 3) {
+            ratingDisplay.classList.add('low');
+        } else if (value <= 7) {
+            ratingDisplay.classList.add('medium');
+        } else {
+            ratingDisplay.classList.add('high');
+        }
+    }
+}
+
+function updateProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    if (!progressBar) return;
+    
+    const count = songs.length;
+    const percentage = Math.min(count * 10, 100);
+    
+    progressBar.style.width = percentage + '%';
+    
+    if (count === 0) {
+        progressBar.textContent = '0 songs';
+    } else if (count === 1) {
+        progressBar.textContent = '1 song';
+    } else {
+        progressBar.textContent = `${count} songs`;
+    }
+}
+
+function updateSongCount() {
+    const songCountSpan = document.getElementById('songCount');
+    if (!songCountSpan) return;
+    
+    songCountSpan.textContent = songs.length;
+}
+
 function displayPlaylist() {
     if (!DOM.playlistContainer) return;
     
@@ -86,6 +181,35 @@ function displayPlaylist() {
     DOM.playlistContainer.innerHTML = html;
 }
 
+function initTooltips() {
+    const buttons = {
+        'addBtn': 'Add new song',
+        'saveBtn': 'Save playlist to file',
+        'sortBtn': 'Sort by rating'
+    };
+    
+    for (const [btnId, text] of Object.entries(buttons)) {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.setAttribute('title', text);
+        }
+    }
+    
+    const fields = {
+        'songName': 'Enter song name',
+        'artist': 'Enter artist name',
+        'genre': 'Select genre',
+        'rating': 'Rate the song 1-10'
+    };
+    
+    for (const [fieldId, text] of Object.entries(fields)) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.setAttribute('title', text);
+        }
+    }
+}
+
 function addSong(event) {
     if (event) {
         event.preventDefault();
@@ -99,13 +223,13 @@ function addSong(event) {
     const format = getSelectedFormat();
 
     if (!name) {
-        alert('Please enter song name!');
+        showNotification('Please enter song name!', 'error');
         DOM.songName.focus();
         return;
     }
 
     if (!artist) {
-        alert('Please enter artist name!');
+        showNotification('Please enter artist name!', 'error');
         DOM.artist.focus();
         return;
     }
@@ -113,7 +237,7 @@ function addSong(event) {
     const newSong = new Song(name, artist, genre, format, rating, hasVideo);
     songs.push(newSong);
     
-    alert(`"${name}" added successfully!`);
+    showNotification(`"${name}" added successfully!`, 'success');
     
     DOM.songName.value = '';
     DOM.artist.value = '';
@@ -126,6 +250,8 @@ function addSong(event) {
     
     DOM.songName.focus();
     displayPlaylist();
+    updateProgressBar();
+    updateSongCount();
     
     console.log('Song added:', newSong);
     console.log('Total songs:', songs.length);
@@ -152,7 +278,15 @@ document.addEventListener('DOMContentLoaded', function() {
         DOM.addBtn.addEventListener('click', addSong);
     }
     
+    if (DOM.rating) {
+        DOM.rating.addEventListener('input', updateRatingDisplay);
+        updateRatingDisplay();
+    }
+    
+    initTooltips();
     displayPlaylist();
+    updateProgressBar();
+    updateSongCount();
     
     console.log('Song Management initialized');
 });

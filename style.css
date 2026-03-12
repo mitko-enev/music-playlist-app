@@ -95,22 +95,53 @@ button:hover {
 
 .progress-bar {
     background: #f0f0f0;
-    border-radius: 5px;
-    height: 20px;
+    border-radius: 20px;
+    height: 25px;
     margin: 20px 0;
     overflow: hidden;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .progress-fill {
     height: 100%;
-    background: #667eea;
-    width: 0%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 12px;
-    transition: width 0.3s;
+    font-size: 13px;
+    font-weight: bold;
+    transition: width 0.5s ease;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255,255,255,0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255,255,255,0.2) 50%,
+        rgba(255,255,255,0.2) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 30px 30px;
+    animation: moveStripes 1s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes moveStripes {
+    0% { background-position: 0 0; }
+    100% { background-position: 30px 0; }
 }
 
 .playlist {
@@ -121,6 +152,18 @@ button:hover {
     color: #333;
     margin-bottom: 10px;
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.song-count {
+    background: #667eea;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-left: 10px;
 }
 
 #playlistContainer {
@@ -249,4 +292,210 @@ footer {
     padding: 30px;
     color: #999;
     font-style: italic;
+}
+
+/* Student 3 - Rating Container Styles */
+.rating-container {
+    position: relative;
+    width: 100%;
+}
+
+.rating-value {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: left 0.1s, background 0.3s;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.rating-value.low {
+    background: #ff6b6b;
+}
+
+.rating-value.medium {
+    background: #feca57;
+    color: #333;
+}
+
+.rating-value.high {
+    background: #48dbfb;
+    color: #333;
+}
+
+.rating-value.low::after {
+    border-top-color: #ff6b6b;
+}
+
+.rating-value.medium::after {
+    border-top-color: #feca57;
+}
+
+.rating-value.high::after {
+    border-top-color: #48dbfb;
+}
+
+.rating-value::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #667eea;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #ff6b6b, #feca57, #48dbfb);
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #667eea;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Student 3 - Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    border-left: 4px solid;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.hide {
+    transform: translateX(120%);
+}
+
+.notification-success {
+    border-left-color: #4CAF50;
+}
+
+.notification-error {
+    border-left-color: #f44336;
+}
+
+.notification-info {
+    border-left-color: #2196F3;
+}
+
+.notification-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.notification-success .notification-icon {
+    background: #4CAF50;
+    color: white;
+}
+
+.notification-error .notification-icon {
+    background: #f44336;
+    color: white;
+}
+
+.notification-info .notification-icon {
+    background: #2196F3;
+    color: white;
+}
+
+.notification-message {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.notification-close {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.notification-close:hover {
+    background: #e0e0e0;
+}
+
+/* Student 3 - Tooltip Styles */
+[title] {
+    position: relative;
+    cursor: help;
+}
+
+[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+    margin-bottom: 5px;
+    pointer-events: none;
+}
+
+[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+    margin-bottom: -5px;
 }
