@@ -171,3 +171,82 @@ footer {
         padding: 25px;
     }
 }
+
+/* Student 2 - Song Item Styles */
+.song-item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.song-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.song-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.song-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.song-details span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rating-stars {
+    color: #f1c40f;
+    letter-spacing: 1px;
+}
+
+.rating-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.rating-badge.low {
+    background: #ff6b6b;
+    color: white;
+}
+
+.rating-badge.medium {
+    background: #feca57;
+    color: #333;
+}
+
+.rating-badge.high {
+    background: #48dbfb;
+    color: #333;
+}
+
+.video-badge {
+    background: #ff6b6b;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.empty-playlist {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+    font-style: italic;
+}
