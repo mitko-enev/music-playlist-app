@@ -181,6 +181,35 @@ function displayPlaylist() {
     DOM.playlistContainer.innerHTML = html;
 }
 
+function initTooltips() {
+    const buttons = {
+        'addBtn': 'Add new song',
+        'saveBtn': 'Save playlist to file',
+        'sortBtn': 'Sort by rating'
+    };
+    
+    for (const [btnId, text] of Object.entries(buttons)) {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.setAttribute('title', text);
+        }
+    }
+    
+    const fields = {
+        'songName': 'Enter song name',
+        'artist': 'Enter artist name',
+        'genre': 'Select genre',
+        'rating': 'Rate the song 1-10'
+    };
+    
+    for (const [fieldId, text] of Object.entries(fields)) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.setAttribute('title', text);
+        }
+    }
+}
+
 function addSong(event) {
     if (event) {
         event.preventDefault();
@@ -254,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateRatingDisplay();
     }
     
+    initTooltips();
     displayPlaylist();
     updateProgressBar();
     updateSongCount();
