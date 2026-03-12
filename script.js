@@ -205,6 +205,25 @@ function sortSongsByArtist() {
     showNotification('Sorted by artist', 'info');
 }
 
+function initKeyboardShortcuts() {
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 'Enter') {
+            event.preventDefault();
+            if (typeof addSong === 'function') {
+                const fakeEvent = { preventDefault: () => {} };
+                addSong(fakeEvent);
+            }
+        }
+        
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            if (typeof savePlaylist === 'function') {
+                savePlaylist();
+            }
+        }
+    });
+}
+
 function updateRatingDisplay() {
     const ratingSlider = document.getElementById('rating');
     let ratingDisplay = document.getElementById('ratingDisplay');
@@ -276,8 +295,8 @@ function displayPlaylist() {
 
 function initTooltips() {
     const buttons = {
-        'addBtn': 'Add new song',
-        'saveBtn': 'Save playlist to file',
+        'addBtn': 'Add new song (Ctrl+Enter)',
+        'saveBtn': 'Save playlist to file (Ctrl+S)',
         'sortBtn': 'Sort by rating'
     };
     
@@ -385,6 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     initTooltips();
+    initKeyboardShortcuts();
     displayPlaylist();
     updateProgressBar();
     updateSongCount();
