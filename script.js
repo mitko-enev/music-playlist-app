@@ -112,6 +112,187 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
+function calculateAverageRating() {
+    if (songs.length === 0) return '0.0';
+    const total = songs.reduce((sum, song) => sum + song.rating, 0);
+    return (total / songs.length).toFixed(1);
+}
+
+function savePlaylist() {
+    if (songs.length === 0) {
+        showNotification('No songs to save!', 'error');
+        return;
+    }
+
+    try {
+        let content = '';
+        content += '='.repeat(60) + '\n';
+        content += '           🎵 MY PLAYLIST 🎵\n';
+        content += '='.repeat(60) + '\n\n';
+        
+        const now = new Date();
+        content += `Date: ${now.toLocaleDateString()}\n`;
+        content += `Time: ${now.toLocaleTimeString()}\n`;
+        content += `Total songs: ${songs.length}\n`;
+        content += `Average rating: ${calculateAverageRating()}\n`;
+        content += '-'.repeat(60) + '\n\n';
+        
+        songs.forEach((song, index) => {
+            content += `${index + 1}. ${song.toString()}\n`;
+        });
+        
+        content += '\n' + '='.repeat(60) + '\n';
+        content += '🎉 Thank you for using the app!\n';
+        content += '='.repeat(60);
+        
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        const dateStr = now.toISOString().slice(0, 10);
+        link.download = `playlist_${dateStr}.txt`;
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showNotification(`Playlist saved! (${songs.length} songs)`, 'success');
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error saving file!', 'error');
+    }
+}
+
+function isDuplicateSong(name, artist) {
+    return songs.some(song => 
+        song.name.toLowerCase() === name.toLowerCase() && 
+        song.artist.toLowerCase() === artist.toLowerCase()
+    );
+}
+
+function sortSongs() {
+    if (songs.length === 0) {
+        showNotification('No songs to sort!', 'error');
+        return;
+    }
+
+    const beforeSort = songs.map(s => s.name).join(',');
+    
+    songs.sort((a, b) => {
+        if (a.rating !== b.rating) {
+            return b.rating - a.rating;
+        }
+        return a.name.localeCompare(b.name);
+    });
+    
+    const afterSort = songs.map(s => s.name).join(',');
+    
+    if (beforeSort !== afterSort) {
+        displayPlaylist();
+        showNotification('Songs sorted by rating!', 'success');
+    } else {
+        showNotification('Songs already sorted!', 'info');
+    }
+}
+
+function sortSongsByName() {
+    if (songs.length === 0) return;
+    songs.sort((a, b) => a.name.localeCompare(b.name));
+    displayPlaylist();
+    showNotification('Sorted by name', 'info');
+}
+
+function sortSongsByArtist() {
+    if (songs.length === 0) return;
+    songs.sort((a, b) => a.artist.localeCompare(b.artist));
+    displayPlaylist();
+    showNotification('Sorted by artist', 'info');
+}
+
+function showPlaylistStats() {
+    if (songs.length === 0) {
+        showNotification('Playlist is empty', 'info');
+        return;
+    }
+    
+    const count = songs.length;
+    const avgRating = calculateAverageRating();
+    const maxRating = Math.max(...songs.map(s => s.rating));
+    const minRating = Math.min(...songs.map(s => s.rating));
+    const genres = [...new Set(songs.map(s => s.genre))];
+    const withVideo = songs.filter(s => s.hasVideo).length;
+    
+    console.log('📊 PLAYLIST STATISTICS:');
+    console.log(`   Songs: ${count}`);
+    console.log(`   Average rating: ${avgRating}/10`);
+    console.log(`   Highest: ${maxRating}`);
+    console.log(`   Lowest: ${minRating}`);
+    console.log(`   Genres: ${genres.length}`);
+    console.log(`   With video: ${withVideo}`);
+    
+    showNotification(`📊 ${count} songs, avg: ${avgRating}/10`, 'info');
+}
+
+function clearForm() {
+    DOM.songName.value = '';
+    DOM.artist.value = '';
+    DOM.rating.value = 5;
+    DOM.hasVideo.checked = false;
+    
+    if (DOM.formatRadios && DOM.formatRadios[0]) {
+        DOM.formatRadios[0].checked = true;
+    }
+    
+    updateRatingDisplay();
+    DOM.songName.focus();
+    showNotification('Form cleared', 'info');
+}
+
+function initKeyboardShortcuts() {
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 'Enter') {
+            event.preventDefault();
+            if (typeof addSong === 'function') {
+                const fakeEvent = { preventDefault: () => {} };
+                addSong(fakeEvent);
+            }
+        }
+        
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            if (typeof savePlaylist === 'function') {
+                savePlaylist();
+            }
+        }
+        
+        if (event.altKey && event.key === 'r') {
+            event.preventDefault();
+            if (typeof sortSongs === 'function') {
+                sortSongs();
+            }
+        }
+        
+        if (event.altKey && event.key === 'n') {
+            event.preventDefault();
+            if (typeof sortSongsByName === 'function') {
+                sortSongsByName();
+            }
+        }
+        
+        if (event.key === 'Escape') {
+            clearForm();
+        }
+        
+        if (event.ctrlKey && event.key === 'i') {
+            event.preventDefault();
+            showPlaylistStats();
+        }
+    });
+}
+
 function updateRatingDisplay() {
     const ratingSlider = document.getElementById('rating');
     let ratingDisplay = document.getElementById('ratingDisplay');
@@ -183,9 +364,9 @@ function displayPlaylist() {
 
 function initTooltips() {
     const buttons = {
-        'addBtn': 'Add new song',
-        'saveBtn': 'Save playlist to file',
-        'sortBtn': 'Sort by rating'
+        'addBtn': 'Add new song (Ctrl+Enter)',
+        'saveBtn': 'Save playlist to file (Ctrl+S)',
+        'sortBtn': 'Sort by rating (Alt+R)'
     };
     
     for (const [btnId, text] of Object.entries(buttons)) {
@@ -234,6 +415,11 @@ function addSong(event) {
         return;
     }
 
+    if (isDuplicateSong(name, artist)) {
+        showNotification(`"${name}" by ${artist} already exists!`, 'error');
+        return;
+    }
+
     const newSong = new Song(name, artist, genre, format, rating, hasVideo);
     songs.push(newSong);
     
@@ -278,15 +464,24 @@ document.addEventListener('DOMContentLoaded', function() {
         DOM.addBtn.addEventListener('click', addSong);
     }
     
+    if (DOM.saveBtn) {
+        DOM.saveBtn.addEventListener('click', savePlaylist);
+    }
+    
+    if (DOM.sortBtn) {
+        DOM.sortBtn.addEventListener('click', sortSongs);
+    }
+    
     if (DOM.rating) {
         DOM.rating.addEventListener('input', updateRatingDisplay);
         updateRatingDisplay();
     }
     
     initTooltips();
+    initKeyboardShortcuts();
     displayPlaylist();
     updateProgressBar();
     updateSongCount();
     
-    console.log('Song Management initialized');
+    console.log('Music Playlist App initialized');
 });
