@@ -158,6 +158,13 @@ function updateProgressBar() {
     }
 }
 
+function updateSongCount() {
+    const songCountSpan = document.getElementById('songCount');
+    if (!songCountSpan) return;
+    
+    songCountSpan.textContent = songs.length;
+}
+
 function displayPlaylist() {
     if (!DOM.playlistContainer) return;
     
@@ -215,6 +222,7 @@ function addSong(event) {
     DOM.songName.focus();
     displayPlaylist();
     updateProgressBar();
+    updateSongCount();
     
     console.log('Song added:', newSong);
     console.log('Total songs:', songs.length);
@@ -248,6 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     displayPlaylist();
     updateProgressBar();
+    updateSongCount();
     
     console.log('Song Management initialized');
 });

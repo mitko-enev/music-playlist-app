@@ -152,6 +152,18 @@ button:hover {
     color: #333;
     margin-bottom: 10px;
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.song-count {
+    background: #667eea;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-left: 10px;
 }
 
 #playlistContainer {
