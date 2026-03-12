@@ -70,6 +70,25 @@ function getSelectedFormat() {
     return 'Single';
 }
 
+function updateRatingDisplay() {
+    const ratingSlider = document.getElementById('rating');
+    let ratingDisplay = document.getElementById('ratingDisplay');
+    
+    if (!ratingDisplay && ratingSlider) {
+        ratingDisplay = document.createElement('span');
+        ratingDisplay.id = 'ratingDisplay';
+        ratingDisplay.className = 'rating-value';
+        ratingSlider.parentNode.appendChild(ratingDisplay);
+    }
+    
+    if (ratingSlider && ratingDisplay) {
+        const value = ratingSlider.value;
+        const percent = (value - 1) / 9 * 100;
+        ratingDisplay.textContent = `Rating: ${value}`;
+        ratingDisplay.style.left = `calc(${percent}% - 30px)`;
+    }
+}
+
 function displayPlaylist() {
     if (!DOM.playlistContainer) return;
     
@@ -150,6 +169,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (DOM.addBtn) {
         DOM.addBtn.addEventListener('click', addSong);
+    }
+    
+    if (DOM.rating) {
+        DOM.rating.addEventListener('input', updateRatingDisplay);
+        updateRatingDisplay();
     }
     
     displayPlaylist();
