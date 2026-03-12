@@ -140,6 +140,24 @@ function updateRatingDisplay() {
     }
 }
 
+function updateProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    if (!progressBar) return;
+    
+    const count = songs.length;
+    const percentage = Math.min(count * 10, 100);
+    
+    progressBar.style.width = percentage + '%';
+    
+    if (count === 0) {
+        progressBar.textContent = '0 songs';
+    } else if (count === 1) {
+        progressBar.textContent = '1 song';
+    } else {
+        progressBar.textContent = `${count} songs`;
+    }
+}
+
 function displayPlaylist() {
     if (!DOM.playlistContainer) return;
     
@@ -196,6 +214,7 @@ function addSong(event) {
     
     DOM.songName.focus();
     displayPlaylist();
+    updateProgressBar();
     
     console.log('Song added:', newSong);
     console.log('Total songs:', songs.length);
@@ -228,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     displayPlaylist();
+    updateProgressBar();
     
     console.log('Song Management initialized');
 });
