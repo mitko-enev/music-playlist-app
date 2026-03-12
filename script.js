@@ -86,6 +86,15 @@ function updateRatingDisplay() {
         const percent = (value - 1) / 9 * 100;
         ratingDisplay.textContent = `Rating: ${value}`;
         ratingDisplay.style.left = `calc(${percent}% - 30px)`;
+        
+        ratingDisplay.classList.remove('low', 'medium', 'high');
+        if (value <= 3) {
+            ratingDisplay.classList.add('low');
+        } else if (value <= 7) {
+            ratingDisplay.classList.add('medium');
+        } else {
+            ratingDisplay.classList.add('high');
+        }
     }
 }
 

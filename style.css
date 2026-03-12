@@ -267,9 +267,35 @@ footer {
     border-radius: 20px;
     font-size: 14px;
     font-weight: bold;
-    transition: left 0.1s;
+    transition: left 0.1s, background 0.3s;
     white-space: nowrap;
     pointer-events: none;
+}
+
+.rating-value.low {
+    background: #ff6b6b;
+}
+
+.rating-value.medium {
+    background: #feca57;
+    color: #333;
+}
+
+.rating-value.high {
+    background: #48dbfb;
+    color: #333;
+}
+
+.rating-value.low::after {
+    border-top-color: #ff6b6b;
+}
+
+.rating-value.medium::after {
+    border-top-color: #feca57;
+}
+
+.rating-value.high::after {
+    border-top-color: #48dbfb;
 }
 
 .rating-value::after {
