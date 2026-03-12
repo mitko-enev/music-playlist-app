@@ -205,6 +205,21 @@ function sortSongsByArtist() {
     showNotification('Sorted by artist', 'info');
 }
 
+function clearForm() {
+    DOM.songName.value = '';
+    DOM.artist.value = '';
+    DOM.rating.value = 5;
+    DOM.hasVideo.checked = false;
+    
+    if (DOM.formatRadios && DOM.formatRadios[0]) {
+        DOM.formatRadios[0].checked = true;
+    }
+    
+    updateRatingDisplay();
+    DOM.songName.focus();
+    showNotification('Form cleared', 'info');
+}
+
 function initKeyboardShortcuts() {
     document.addEventListener('keydown', function(event) {
         if (event.ctrlKey && event.key === 'Enter') {
@@ -220,6 +235,24 @@ function initKeyboardShortcuts() {
             if (typeof savePlaylist === 'function') {
                 savePlaylist();
             }
+        }
+        
+        if (event.altKey && event.key === 'r') {
+            event.preventDefault();
+            if (typeof sortSongs === 'function') {
+                sortSongs();
+            }
+        }
+        
+        if (event.altKey && event.key === 'n') {
+            event.preventDefault();
+            if (typeof sortSongsByName === 'function') {
+                sortSongsByName();
+            }
+        }
+        
+        if (event.key === 'Escape') {
+            clearForm();
         }
     });
 }
@@ -297,7 +330,7 @@ function initTooltips() {
     const buttons = {
         'addBtn': 'Add new song (Ctrl+Enter)',
         'saveBtn': 'Save playlist to file (Ctrl+S)',
-        'sortBtn': 'Sort by rating'
+        'sortBtn': 'Sort by rating (Alt+R)'
     };
     
     for (const [btnId, text] of Object.entries(buttons)) {
