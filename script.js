@@ -166,6 +166,45 @@ function savePlaylist() {
     }
 }
 
+function sortSongs() {
+    if (songs.length === 0) {
+        showNotification('No songs to sort!', 'error');
+        return;
+    }
+
+    const beforeSort = songs.map(s => s.name).join(',');
+    
+    songs.sort((a, b) => {
+        if (a.rating !== b.rating) {
+            return b.rating - a.rating;
+        }
+        return a.name.localeCompare(b.name);
+    });
+    
+    const afterSort = songs.map(s => s.name).join(',');
+    
+    if (beforeSort !== afterSort) {
+        displayPlaylist();
+        showNotification('Songs sorted by rating!', 'success');
+    } else {
+        showNotification('Songs already sorted!', 'info');
+    }
+}
+
+function sortSongsByName() {
+    if (songs.length === 0) return;
+    songs.sort((a, b) => a.name.localeCompare(b.name));
+    displayPlaylist();
+    showNotification('Sorted by name', 'info');
+}
+
+function sortSongsByArtist() {
+    if (songs.length === 0) return;
+    songs.sort((a, b) => a.artist.localeCompare(b.artist));
+    displayPlaylist();
+    showNotification('Sorted by artist', 'info');
+}
+
 function updateRatingDisplay() {
     const ratingSlider = document.getElementById('rating');
     let ratingDisplay = document.getElementById('ratingDisplay');
@@ -334,6 +373,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (DOM.saveBtn) {
         DOM.saveBtn.addEventListener('click', savePlaylist);
+    }
+    
+    if (DOM.sortBtn) {
+        DOM.sortBtn.addEventListener('click', sortSongs);
     }
     
     if (DOM.rating) {
