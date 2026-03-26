@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Music Playlist App - Course Project">
+    <meta name="keywords" content="music, playlist, songs, git, github">
+    <meta name="author" content="Team - Student 1, Student 2, Student 3, Student 4">
+    <title>Music Playlist App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Music Playlist</h1>
+        
+        <form id="songForm">
+            <div class="form-group">
+                <label for="songName">Song name:</label>
+                <input type="text" id="songName" placeholder="Enter song name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="artist">Artist:</label>
+                <input type="text" id="artist" placeholder="Enter artist name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="genre">Genre:</label>
+                <select id="genre">
+                    <option>Pop</option>
+                    <option>Rock</option>
+                    <option>Hip-Hop</option>
+                    <option>Jazz</option>
+                    <option>Classical</option>
+                    <option>Electronic</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Format:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="format" value="Single" checked> Single</label>
+                    <label><input type="radio" name="format" value="Album"> Album</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="rating-container">
+                    <input type="range" id="rating" min="1" max="10" value="5">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><input type="checkbox" id="hasVideo"> Has video clip</label>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" id="addBtn">➕ Add Song</button>
+                <button type="button" id="saveBtn">💾 Save Playlist</button>
+                <button type="button" id="sortBtn">📊 Sort by Rating</button>
+            </div>
+        </form>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar">0 songs</div>
+        </div>
+
+        <div class="playlist">
+            <h2>📋 Playlist <span id="songCount">0</span></h2>
+            <div id="playlistContainer"></div>
+        </div>
+
+        <footer>
+            <p>© 2026 Music Playlist App - Course Project</p>
+            <p>Team: Student 1, Student 2, Student 3, Student 4</p>
+            <p>Trakia University</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
